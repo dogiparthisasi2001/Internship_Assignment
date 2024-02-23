@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Images</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .container-fluid {
+            display: flex;
+            flex-wrap: wrap;
+            width: 100%;
+            justify-content: space-around;
+        }
+
+        .card {
+            width: calc(25% - 40px);
+            margin: 20px;
+            box-sizing: border-box;
+            background: #dcdcdc;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        .card.selected {
+            background-color: #3bb77e;
+        }
+
+        .card.selected h4,
+        .card.selected p {
+            color: #fff;
+        }
+
+        img {
+            max-width: 100%;
+            height: 350px;
+            width: 100%;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            background: #fff;
+        }
+
+        h1 {
+            margin-top: 30px;
+            font-size: 35px;
+            font-weight: 500;
+            position: relative;
+            margin-bottom: 70px;
+        }
+
+        h1::after {
+            content: '';
+            display: block;
+            width: 150px;
+            height: 3px;
+            background-color: #3bb77e;
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        h4 {
+            text-align: center;
+            font-size: 22px;
+            color: #696969;
+        }
+
+        p {
+            text-align: center;
+            color: #696969;
+            font-size: 20px;
+        }
+
+        @media only screen and (max-width: 1200px) {
+            .card {
+                width: calc(33.33% - 40px);
+            }
+        }
+
+        @media only screen and (max-width: 800px) {
+            .card {
+                width: calc(50% - 40px);
+            }
+        }
+
+        @media only screen and (max-width: 400px) {
+            .card {
+                width: calc(100% - 40px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Select Doctor</h1>
+    <div class="container-fluid" id="data-output">
+
+    </div>
+    <script>
+        fetch('images.json')
+            .then(function (res) {
+                return res.json();
+            })
+            .then(function (data) {
+
+                let container = document.getElementById("data-output");
+                let selectedCard = null;
+                for (let image of data) {
+                    let card = document.createElement("div");
+                    card.classList.add("card");
+
+                    let img = document.createElement("img");
+                    img.src = image.image;
+                    img.alt = "img";
+
+                    let name = document.createElement("h4");
+                    name.textContent = image.name
+
+                    let dept = document.createElement("p");
+                    dept.textContent = image.dept
+
+                    card.appendChild(img);
+                    card.appendChild(name);
+                    card.appendChild(dept);
+
+                    card.addEventListener('click', function () {
+                        if (selectedCard) {
+                            selectedCard.classList.remove('selected');
+                        }
+                        card.classList.toggle('selected');
+                        selectedCard = card;
+                    });
+
+                    container.appendChild(card);
+                }
+            })
+            .catch(function (error) {
+                console.error('Error fetching JSON:', error);
+            });
+    </script>
+</body>
+
+</html>
